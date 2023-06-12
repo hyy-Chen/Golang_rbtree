@@ -15,7 +15,7 @@ import (
 // 4.红色节点的儿子必是黑色节点
 // 5.从任意节点出发，到达任意一个叶子节点的路径上的黑色节点数相同
 
-// 由于定义4，所以从根到叶子的最长的可能路径不多于最短的可能路径的两倍长。
+// 由于定义4，所以从根到叶子的最长的可能路径不会多于最短的可能路径的两倍长。
 
 // CompareFunc 定义比较方法 0：a==b, 1: a < b, 2 : a > b
 type CompareFunc func(a, b interface{}) uint8
@@ -43,6 +43,7 @@ func NewMap(compareFunc CompareFunc) *Map {
 	}
 }
 
+// Pair 键值对结构体
 type Pair struct {
 	Key keyItem
 	Val valItem
@@ -306,6 +307,17 @@ func (m *Map) eraseSort(node *Node) {
 }
 
 // 在树中对节点进行左旋，左旋时注意：左旋节点一定要有右儿子
+//
+// 旋转状态如下，现在是对b进行左旋
+//
+//	  |                                  |
+//	  b                                  d
+//	 / \         rotateLeft             / \
+//	a   d       ------------->         b   e
+//	   / \                            / \
+//	  c   e                          a   c
+//
+// 旋转前后的中序遍历结果是相同的
 func (m *Map) rotateLeft(node *Node) {
 	// 获得当前节点的右儿子以及当前节点的父节点
 	rightChild := node.right
@@ -328,6 +340,17 @@ func (m *Map) rotateLeft(node *Node) {
 }
 
 // 在树中对节点进行左旋，右旋时注意：右旋节点一定要有左儿子
+//
+// 旋转状态如下，现在是对d进行右旋
+//
+//	    |                                  |
+//	    d                                  b
+//	   / \         rotateLeft             / \
+//	  b   e       ------------->         a   d
+//	 / \                            		/ \
+//	a   c                          		   c   e
+//
+// 旋转前后的中序遍历结果是相同的
 func (m *Map) rotateRight(node *Node) {
 	// 获得左儿子信息以及当前节点的父节点
 	leftChild := node.left
